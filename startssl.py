@@ -52,12 +52,16 @@ import pyasn1_modules.rfc2459
 import zipfile
 import io
 
+import json
+import uuid
+
 
 class CSR:
     """
     Parses CSRs
     """
     id_PKCS9_extensionRequest = pyasn1.type.univ.ObjectIdentifier('1.2.840.113549.1.9.14')
+
 
     def __init__(self, pem_csr):
         if 'read' in dir(pem_csr):
@@ -134,6 +138,10 @@ class API(object):
     STARTCOM_CA = "/etc/ssl/certs/StartCom_Certification_Authority.pem"
     STARTSSL_BASEURI = "https://startssl.com"
     STARTSSL_AUTHURI = "https://auth.startssl.com"
+    STARTSSL_TOOLBOXURI = "https://startssl.com/ToolBox"
+    STARTSSL_GETDOMAINSURI = "https://startssl.com/ControlPanel/AjaxRequestGetAllDomainValis"
+    STARTSSL_GETEMAILSURI = "https://startssl.com/ControlPanel/AjaxRequestGetAllEmailValis"
+    STARTSSL_SUBMITCSR = "https://startssl.com/Certificates/ssl"
 
     RETRIEVE_CERTIFICATE_LIST = re.compile(
         '<tr style="text-align:center;">\s+<td style="vertical-align:middle;">(?P<order_number>\d+)</td>\s+<td align="left" style="vertical-align:middle;" title="(?P<name>.+?)">.+?</td>\s+<td align="left" style="vertical-align:middle;">(?P<product>[\w ]+?)</td>\s+<td style="vertical-align:middle;">\s*(?:<span>)?(?P<issuance_date_year>\d{4})?-?(?P<issuance_date_month>\d{2})?-?(?P<issuance_date_day>\d{2})?(?:</span><br /><span>)?(?P<expiry_date_year>\d{4})?-?(?P<expiry_date_month>\d{2})?-?(?P<expiry_date_day>\d{2})?(?:</span>)?\s*</td>\s+<td style="vertical-align:middle;">\s+(?P<status>.+?)<!--.*?-->\s+</td>\s+<td align="center" style="vertical-align:middle;">\s*(?s)(?P<actions_code>.*?)\s*</td>\s*</tr>',
@@ -146,6 +154,7 @@ class API(object):
     REQUEST_CERTIFICATE_READY_DOMAINS = re.compile('<li><b><i>(?P<domain>.+?)</i></b></li>')
     REQUEST_CERTIFICATE_CERT = re.compile('<textarea.*?>(?P<certificate>.*?)</textarea>')
     VALIDATED_RESSOURCES = re.compile('<td nowrap>(?P<resource>.+?)</td><td nowrap> <img src="/img/yes-sm.png"></td>')
+    CERTIFICATE_PROFILES = {'smime': "S/MIME", 'server': "Server", 'xmpp': "XMPP", 'code': "Object"}
 
     def __init__(self, ca_certs=STARTCOM_CA, user_agent=None):
         """
@@ -222,17 +231,27 @@ class API(object):
         assert self.authenticated, "not authenticated"
         if self.validated_emails is not None and self.validated_domains is not None and not force_update:
             return self.validated_emails, self.validated_domains
-        body = [('app', 12)]
-        resp, content = self.__request(self.STARTSSL_BASEURI, method="POST", body=body)
-        assert resp.status == 200
-        items = self.VALIDATED_RESSOURCES.findall(content)
+
         self.validated_emails = []
         self.validated_domains = []
-        for item in items:
-            if '@' in item:
-                self.validated_emails.append(item)
-            else:
-                self.validated_domains.append(item)
+
+        body = [('app', 12)]
+        resp, content = self.__request(self.STARTSSL_GETDOMAINSURI + '?cacheKey=' + str(uuid.uuid4()), method="GET", body=body)
+        assert resp.status == 200
+
+        parsed_domains = json.loads(content)
+
+        for domain in parsed_domains:
+            self.validated_domains.append(domain['Domain'])
+
+        resp, content = self.__request(self.STARTSSL_GETEMAILSURI + '?cacheKey=' + str(uuid.uuid4()), method="GET", body=body)
+        assert resp.status == 200
+
+        parsed_emails = json.loads(content)
+
+        for email in parsed_emails:
+            self.validated_emails.append(email['Email'])
+
         return self.validated_emails, self.validated_domains
 
     def is_validated_domain(self, domain):
@@ -432,80 +451,11 @@ class API(object):
             assert len(subjects_direct) > 0, "no direct subjects identified."
 
             # submit CSR
-            body = [('app', 12), ('rs', 'second_step_certs'), ('rsargs[]', profile), ('rsargs[]', csr.get_pem())]
-            resp, content = self.__request(self.STARTSSL_BASEURI, method="POST", body=body)
+            body = [('domains', "".join(subjects)), ('rbcsr', 'scsr'), ('areaCSR', csr.get_pem()), ('hidchekcer', '1'), ('__EVENTTARGET', 'btnSubmit')]
+            resp, content = self.__request(self.STARTSSL_SUBMITCSR, method="POST", body=body)
+            assert resp.status == 302, "CSR req is not redirecting"
+            resp, content = self.__request(self.STARTSSL_BASEURI + resp['location'], method="GET")
             assert resp.status == 200, "second_step_certs bad status"
-            assert "<li>You submitted your certificate signing request successfully!.</li>" in content, "CSR submit failed"
-
-            # extract CSR csr_id
-            item = self.REQUEST_CERTIFICATE_CSR_ID.search(content)
-            assert item, "no CSR csr_id found"
-            assert profile == item.group('type'), "profile mismatch"
-            certificate_id = int(item.group('csr_id'))
-
-            # add primary (directly verified/drop down box) domains (using 3. rsarg of fourth_step_certs)
-            for domain in subjects_direct:
-                body = [('app', 12), ('rs', 'fourth_step_certs'), ('rsargs[]', profile), ('rsargs[]', certificate_id),
-                        ('rsargs[]', domain), ('rsargs[]', '')]
-                resp, content = self.__request(self.STARTSSL_BASEURI, method="POST", body=body)
-                assert resp.status == 200, "fourth_step_certs bad status"
-
-                # add subdomains (using 4. rsarg of fourth_step_certs)
-                # we've to do this after adding the primary domain, adding all primary domains first and then the subdomains will result in a wrong CN
-                for subdomain in subjects_subdomain:
-                    if not subdomain.endswith("."+domain): # skip subdomains belonging to another primary domains
-                        continue
-                    body = [('app', 12), ('rs', 'fourth_step_certs'), ('rsargs[]', profile), ('rsargs[]', certificate_id),
-                            ('rsargs[]', ''), ('rsargs[]', subdomain)]
-                    resp, content = self.__request(self.STARTSSL_BASEURI, method="POST", body=body)
-                    assert resp.status == 200, "fourth_step_certs bad status"
-
-            # get ready page (list of all submitted domains)
-            body = [('app', 12), ('rs', 'fifth_step_certs'), ('rsargs[]', profile), ('rsargs[]', certificate_id),
-                    ('rsargs[]', ''), ('rsargs[]',
-                                       '')]  # usually the last rsargs format is "."+validated_domain (empty text box with default drop down value), but apparently it's not used anyway
-            resp, content = self.__request(self.STARTSSL_BASEURI, method="POST", body=body)
-            assert resp.status == 200, "fifth_step_certs bad status"
-            if "already exists" in content:
-                raise ValueError("A certificate with the common name %s already exists" % csr_cn)
-            assert "<li>We have gathered enough information in order to sign your certificate now.</li>" in content, "fifth_step_certs unexpected content %s" % (
-                content)
-
-            # extract common name
-            item = self.REQUEST_CERTIFICATE_READY_CN.search(content)
-            assert item, "no common name found"
-            common_name = item.group('cn')
-            assert common_name == csr_cn, "common name (%s) doesn't match the CSR common name (%s)" % (
-                common_name, csr_cn)
-
-            # extract domains
-            domains = self.REQUEST_CERTIFICATE_READY_DOMAINS.findall(content)
-            assert len(domains) > 0, "no domains found"
-            assert set(subjects) <= set(domains), "domains (%s) don't include all CSR domains (%s)" % (
-                str(domains), str(subjects))
-
-            # finalize the request
-            body = [('app', 12), ('rs', 'sixth_step_certs'), ('rsargs[]', profile), ('rsargs[]', certificate_id)]
-            resp, content = self.__request(self.STARTSSL_BASEURI, method="POST", body=body)
-            assert resp.status == 200, "sixth_step_certs bad status"
-
-            if "In the textbox below is your PEM encoded certificate." in content:
-                # this code path hasn't been tested yet
-                item = self.REQUEST_CERTIFICATE_CERT.search(content)
-                assert item, "no certificate found"
-                cert = item.group('certificate')
-                cert = cert.replace("\\n", "\n")
-                assert "-----BEGIN CERTIFICATE-----" in cert, "no BEGIN CERTIFICATE"
-                assert "-----END CERTIFICATE-----" in cert, "no END CERTIFICATE"
-            elif "However your certificate request has been marked for approval by our personnel" in content:
-                cert = None
-            else:
-                raise ValueError("Unexpected final return content: %s" % content)
-
-            return certificate_id, common_name, domains, cert
-        else:
-            raise NotImplementedError('Only server/xmpp certificates are supported.')
-
 
 if __name__ == "__main__":
     config_files = ['/etc/startssl.conf', 'startssl.conf']
@@ -572,14 +522,10 @@ if __name__ == "__main__":
             try:
                 print("Submitting %s" % csr_file.name)
                 csr = CSR(csr_file)
-                certificate_id, common_name, subjects, cert = api.submit_certificate_request(profile=args.profile, csr=csr)
-                if cert is None:
-                    status = "pending for approval"
-                else:
-                    status = "certificate ready"
-                print("Submission successful; id=%i; CN=%s; subjects=%s; %s" % (certificate_id, common_name, ", ".join(subjects), status))
-                if cert:
-                    print(cert)
+                api.submit_certificate_request(profile=args.profile, csr=csr)
+
+                print("Submission successful;")
+
             except ValueError as e:
                 print("Submission failed:", e)
             except Exception as e:
