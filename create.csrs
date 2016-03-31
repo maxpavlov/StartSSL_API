@@ -1,0 +1,275 @@
+Last login: Wed Mar 30 23:21:35 on ttys000
+Proton:~ maxpavlov$ cd ./Documents/GitHub/
+Proton:GitHub maxpavlov$ cd ..
+Proton:Documents maxpavlov$ ls
+Adobe
+GitHub
+NEW_gds.xlsx
+Parallels
+SKBX-ANIMATIONS.prproj
+SKBX-NOT-FOUND.prproj
+ViberDownloads
+WebStormProjects
+blog.maxpavlov.com-pk.pem
+didus-31.01.pdf
+grimsbi.pdf
+partner_all-1.doc
+Все женщины продаются_10.pdf
+Все женщины продаются_11.pdf
+ПАРТНЕРСЬКИЙ ДОГОВІР 05.2015.doc
+свадьба
+Proton:Documents maxpavlov$ cd ..
+Proton:~ maxpavlov$ cd Downloads/
+Proton:Downloads maxpavlov$ cd StartSSL_API
+Proton:StartSSL_API maxpavlov$ startssl.py csr ./maxpavlov.com/maxpavlov.com.csr ./mail.maxpavlov.com/mail.maxpavlov.com.csr
+-bash: startssl.py: command not found
+Proton:StartSSL_API maxpavlov$ python startssl.py csr ./maxpavlov.com/maxpavlov.com.csr ./mail.maxpavlov.com/mail.maxpavlov.com.csr
+Submitting ./maxpavlov.com/maxpavlov.com.csr
+Submission failed:
+Traceback (most recent call last):
+  File "startssl.py", line 576, in <module>
+    certificate_id, common_name, subjects, cert = api.submit_certificate_request(profile=args.profile, csr=csr)
+  File "startssl.py", line 406, in submit_certificate_request
+    self.get_validated_resources()
+  File "startssl.py", line 228, in get_validated_resources
+    assert resp.status == 200
+AssertionError
+
+Submitting ./mail.maxpavlov.com/mail.maxpavlov.com.csr
+Submission failed:
+Traceback (most recent call last):
+  File "startssl.py", line 576, in <module>
+    certificate_id, common_name, subjects, cert = api.submit_certificate_request(profile=args.profile, csr=csr)
+  File "startssl.py", line 406, in submit_certificate_request
+    self.get_validated_resources()
+  File "startssl.py", line 228, in get_validated_resources
+    assert resp.status == 200
+AssertionError
+
+Proton:StartSSL_API maxpavlov$ cd ..
+Proton:Downloads maxpavlov$ ls
+000005320104110010100000000397.png
+2016.03.09_EMARATECH_SERVICES_DDL.sql
+201602_E5840-4_Pavlov Maksym.xlsx
+AE_SKBX
+AWg6vMxJ6o.png
+Adobe Creative Cloud 2015 (CC 2015) KG + AMtlib
+American.Dad.S12E03.720p.HDTV.x264-AVS[ettv]
+AppIcons.png
+Atlassian_Keygen_V2.1.6-exp.rar
+BDD.png
+Beyond Compare 4.1.5 [p].dmg
+DSC_0260_kopia_2.jpg
+DfFHsXzitR8.jpg
+EXsuKWd.png
+Enter API (1).psd
+Enter API.psd
+EyeLeo.app
+GUZgrac15ks.jpg
+GitHub Desktop 216.zip
+Globalnaya_tendentsia_perenosa_vsego_faylovogo_khranilischa_v_oblachnye_servisy_davno_stala_obychnym_delom.docx
+HowNotToInterview.pptx
+IMG_2357.JPG
+JenkinsVsTeamCity.jpg
+KT_flight_search_results_desktop_V6.jpg
+KT_hotel_search_results_desktop_V11.jpg
+MeetSKBX.docx
+MeetSKBX.docx.docx
+Oswald-Bold.ttf
+Oswald-Light.ttf
+Oswald-Regular.ttf
+PEMBuilder_Deploy_to_MYKYTA_64 (1).log
+PEMBuilder_Deploy_to_MYKYTA_64.log
+ParAvion
+Radacode_night.ai
+Response.txt
+SKBX-Max.doc
+SKYBOX-25722918-310116-0817-23.pdf
+STM25.otf
+STM35.otf
+STM36.otf
+STM45.otf
+STM46.otf
+STM55.otf
+STM56.otf
+STM65.otf
+STM66.otf
+STM75.otf
+STM76.otf
+StartSSL_API
+StartSSL_API.7z
+TC_radacode.ai
+TC_radacode.png
+TS-111.JPG
+TV-Playlist.m3u
+Tongbu_mac_v1.2.0.1.dmg
+Tuxera NTFS 2015.1 [kg].dmg
+WebStorm-2016.1.dmg
+WebStorm12.evaluation.key
+Xamarin
+[inmac.org].t31476.torrent
+[inmac.org].t31519.torrent
+[inmac.org].t33451.torrent
+[inmac.org].t33817.torrent
+[inmac.org].t34135.torrent
+[inmac.org].t34612.torrent
+[kat.cr]american.dad.s12e05.hdtv.x264.killers.rartv (1).torrent
+[kat.cr]american.dad.s12e05.hdtv.x264.killers.rartv.torrent
+[rutracker.org].t4276399.torrent
+admin-25722942-250116-1352-18.pdf
+admin-28213270-280316-1246-2.pdf
+ava.jpg
+backend-master-eb24b54822ee8f066df9cd56ab66d3b8dbbfdb28
+backend-master-eb24b54822ee8f066df9cd56ab66d3b8dbbfdb28 (1).zip
+backend-master-eb24b54822ee8f066df9cd56ab66d3b8dbbfdb28.zip
+bosch-kin-86-ad-30_images_1400843973.jpg
+buket.jpg
+cat-home.png
+dbb-example-keytravel.png
+endpoints-1.json
+endpoints.json
+eyeleo.mac_Build_Release_101_artifacts.zip
+eyeleo.mac_Build_Release_106_artifacts.zip
+eyeleo.mac_Build_Release_98_artifacts.zip
+favicon.ico
+files_859703_1080.txt
+gTj-G8VYz6k.jpg
+gitlab.png
+holodilnik-1.jpg
+holodilnik-2.jpg
+holodilnik-3.jpg
+iaO_SO_3sPo.jpg
+jre-8u66-macosx-x64.dmg
+light.jpg
+logo-active-directory-176x125.png
+mail.iakivchuk.com (1).pem
+mail.iakivchuk.com(renegade777).key
+mail.iakivchuk.com.pem
+mail.maxpavlov.com-full.pem
+mail.maxpavlov.com.cer.pem
+mail.maxpavlov.com.zip
+mhg-6-1.jpg
+mykyta.pem
+mykyta.radacode.net
+mykyta.radacode.net.pem
+mykyta.radacode.net.zip
+nastya-ava-1.jpg
+node-v4.3.1.pkg
+php.ini
+pycharm-professional-2016.1.dmg
+radacode-logo-yellow-mono-gray-dark.png
+radacode_logo_gray.svg
+refinedtheme-for-confluence-4.2.21.jar
+segoepr.ttf
+segoeprb.ttf
+segoeui.ttf
+segoeuib.ttf
+segoeuii.ttf
+segoeuil.ttf
+segoeuisl.ttf
+segoeuiz.ttf
+seguibl.ttf
+seguibli.ttf
+seguili.ttf
+seguisb.ttf
+seguisli.ttf
+skbx-photo.jpg
+swarm-trigger.pl
+swarm-trigger.vbs
+swarm.tgz
+tc-logo.png
+ticketing-system-ballpark.pdf
+triolan1.m3u
+vgKsPCgIRY8.jpg
+violet-blue-rdc-tc.svg
+vlc-2.2.1.dmg
+vrez-ruchka__1_.jpg
+vrez-ruchka__3_.jpg
+web_02.psd
+wiki.jpg
+www.maxpavlov.com.crt.pem
+xhCJhOQ.png
+your_file.txt
+НашБас.pdf
+Разработка финансового процессинга.pdf
+Сценарий+7+Meet+SKBX (1).doc
+Сценарий+7+Meet+SKBX.doc
+ручка-1.jpeg
+схема-интеграции-с-1С.pdf
+Proton:Downloads maxpavlov$ cd ..
+Proton:~ maxpavlov$ cd Documents/
+Proton:Documents maxpavlov$ ls
+Adobe
+GitHub
+NEW_gds.xlsx
+Parallels
+SKBX-ANIMATIONS.prproj
+SKBX-NOT-FOUND.prproj
+ViberDownloads
+WebStormProjects
+blog.maxpavlov.com-pk.pem
+didus-31.01.pdf
+grimsbi.pdf
+partner_all-1.doc
+resCSR.html
+Все женщины продаются_10.pdf
+Все женщины продаются_11.pdf
+ПАРТНЕРСЬКИЙ ДОГОВІР 05.2015.doc
+свадьба
+Proton:Documents maxpavlov$ cd GitHub/StartSSL_API/
+Proton:StartSSL_API maxpavlov$ ls
+LICENSE			mail.radacode.me	startssl.conf		startssl.pem
+README.md		radacode.me		startssl.conf.example	startssl.py
+Proton:StartSSL_API maxpavlov$ clear
+
+Proton:StartSSL_API maxpavlov$ openssl genrsa -out ./radacode.me/radacode.me.key 2048
+Generating RSA private key, 2048 bit long modulus
+...................................................................+++
+....................................................+++
+e is 65537 (0x10001)
+Proton:StartSSL_API maxpavlov$ openssl genrsa -out ./mail.radacode.me/mail.radacode.me.key 2048
+Generating RSA private key, 2048 bit long modulus
+.......+++
+......+++
+e is 65537 (0x10001)
+Proton:StartSSL_API maxpavlov$ openssl req -new -sha256 -key ./radacode.me/radacode.me.key -out ./radacode.me/radacode.me.csr
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:UA
+State or Province Name (full name) [Some-State]:KY
+Locality Name (eg, city) []:KYIV
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Radacode Inc.
+Organizational Unit Name (eg, section) []:DEV
+Common Name (e.g. server FQDN or YOUR name) []:radacode.me
+Email Address []:hello@radacode.com
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
+Proton:StartSSL_API maxpavlov$ openssl req -new -sha256 -key ./mail.radacode.me/mail.radacode.me.key -out ./mail.radacode.me/mail.radacode.me.csr
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:UA
+State or Province Name (full name) [Some-State]:KY
+Locality Name (eg, city) []:KTIV
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Radacode Inc.
+Organizational Unit Name (eg, section) []:DEV
+Common Name (e.g. server FQDN or YOUR name) []:mail.radacode.me
+Email Address []:hello@radacode.com
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
+Proton:StartSSL_API maxpavlov$ 
