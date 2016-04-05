@@ -67,14 +67,10 @@ target/
 
 .idea/workspace.xml
 
-mail.radacode.me/mail.radacode.me.csr
+*.csr
 
-mail.radacode.me/mail.radacode.me.key
+*.key
 
-radacode.me/radacode.me.csr
+*.conf
 
-radacode.me/radacode.me.key
-
-startssl.conf
-
-startssl.pem
+*.pem
