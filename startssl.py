@@ -239,7 +239,7 @@ class API(object):
         resp, content = self.__request(self.STARTSSL_GETDOMAINSURI + '?cacheKey=' + str(uuid.uuid4()), method="GET", body=body)
         assert resp.status == 200
 
-        parsed_domains = json.loads(content)
+        parsed_domains = json.loads(content.decode())
 
         for domain in parsed_domains:
             self.validated_domains.append(domain['Domain'])
@@ -247,7 +247,7 @@ class API(object):
         resp, content = self.__request(self.STARTSSL_GETEMAILSURI + '?cacheKey=' + str(uuid.uuid4()), method="GET", body=body)
         assert resp.status == 200
 
-        parsed_emails = json.loads(content)
+        parsed_emails = json.loads(content.decode())
 
         for email in parsed_emails:
             self.validated_emails.append(email['Email'])
